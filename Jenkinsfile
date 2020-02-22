@@ -21,14 +21,6 @@ pipeline {
                 }
             }
         }
-        
-        stage('quality test') {
-            steps {
-                echo "begin quality test"
-                sh "mvn sonar:sonar -Dsonar.host.url=http://172.17.0.4:9000 -Dsonar.login=ea73c1fc82c1ec062f7e9ee2bb999a00c17f02b9"
-            }
-        }
-
 
         stage('build maven') {
             steps {
@@ -40,11 +32,5 @@ pipeline {
             }
         }
         
-        stage("docker build") {
-            steps {
-                sh "pwd"
-                sh "docker build -t ${SERVICE_DIR}:${build_tag} -f ./authserver/Dockerfile ."
-            }
-        }
     }
 }
