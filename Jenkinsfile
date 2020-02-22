@@ -27,7 +27,7 @@ pipeline {
                 echo "begin pkg"
                 sh "ls -a"
                 sh "mvn -v"
-                '''sh "mvn -U -am clean package"'''
+                sh "mvn -U -am clean package"
 
             }
         }
