@@ -16,6 +16,7 @@ spring:
         format_sql: true
     show-sql: true
 
+
 server:
   port: 9001
 
@@ -27,4 +28,9 @@ eureka:
     registry-fetch-interval-seconds: 5
   instance:
     lease-renewal-interval-in-seconds: 5
-    lease-expiration-duration-in-seconds: 10
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+#    lease-expiration-duration-in-seconds: 10

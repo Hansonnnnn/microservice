@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/user")
@@ -18,14 +19,24 @@ public class LoginController {
         this.userFeignClient = userFeignClient;
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
     public Response<User> login(@RequestParam("mobile")String mobile,
                                 @RequestParam("password")String password) {
         User user = User.builder().mobile(mobile).password(password).build();
-        boolean result = userFeignClient.login(user);
+        boolean result = userFeignClient.signIn(user);
         if (result) {
             return Response.success(user);
         }
         return Response.error(CodeMsg.USER_INFO_ERROR);
+    }
+
+    /**
+     * todo session and redis
+     * @return login page
+     */
+    @RequestMapping(value = "/logout")
+    public String doLogout() {
+        return "login";
     }
 }

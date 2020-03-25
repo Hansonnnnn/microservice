@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import rest.RestResponse;
 
 @Api(tags = "用户服务", description = "提供用户服务相关Rest API")
-@RestController("/users")
+@RestController("UserController")
+@RequestMapping("/users")
 public class UserController {
     private UserRepository userRepository;
 
@@ -36,7 +37,7 @@ public class UserController {
     @ApiOperation("用户登录验证接口")
     @PostMapping("/signIn")
     public boolean signIn(@RequestBody User user) {
-        User foundUser = userRepository.findByUsername(user.getUsername());
+        User foundUser = userRepository.findByMobile(user.getMobile());
         if (foundUser == null) return false;
         return BCrypt.checkpw(user.getPassword(), foundUser.getPassword());
     }

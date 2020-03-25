@@ -29,3 +29,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### bootstrap
+eczuul/src/main/resources/static/bootstrap
+### jquery
+eczuul/src/main/resources/static/js/jquery.min.js
