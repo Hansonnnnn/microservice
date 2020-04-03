@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import rest.RestResponse;
 
-@FeignClient(name = "user")
+@FeignClient(value = "route")
 public interface UserFeignClient {
-    @PostMapping(value = "/users/signIn")
+    @PostMapping(value = "/route-user/users/signIn")
     RestResponse<User> signIn(@RequestBody User user);
 }
