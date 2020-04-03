@@ -2,6 +2,7 @@ package cn.edu.nju.eczuul.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import rest.CodeMsg;
 
 @Getter
 @Setter

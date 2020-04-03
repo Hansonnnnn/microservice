@@ -1,10 +1,19 @@
-package cn.edu.nju.eczuul.response;
+package rest;
 
 public enum CodeMsg {
     //通用的错误码
     SUCCESS(0, "success"),
+    SERVER_ERROR(500100, "服务端异常"),
     //登录模块 5002XX
-    USER_INFO_ERROR(500201, "手机号或密码错误");
+    USER_INFO_ERROR(500201, "手机号或密码错误"),
+    USER_NOT_FOUND(500202, "用户不存在"),
+    //秒杀模块 5003XX
+    SEC_KILL_OVER(500301, "秒杀商品已秒杀光"),
+    SEC_KILL_REPEATED(500302, "已秒杀成功"),
+    //库存模块 5004XX
+    INVENTORY_NOT_ENOUGH(500401, "库存不够")
+    ;
+
     private int code;
     private String msg;
 

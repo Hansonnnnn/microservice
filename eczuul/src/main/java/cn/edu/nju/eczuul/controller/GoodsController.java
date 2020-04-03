@@ -2,12 +2,17 @@ package cn.edu.nju.eczuul.controller;
 
 import cn.edu.nju.eczuul.dao.SecGoodsRepository;
 import cn.edu.nju.eczuul.entity.SecGood;
+import cn.edu.nju.eczuul.redis.UserKey;
+import cn.edu.nju.eczuul.service.RedisUtil;
+import cn.edu.nju.eczuul.util.CookieUtil;
+import entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -15,9 +20,12 @@ import java.util.List;
 public class GoodsController {
     private SecGoodsRepository secGoodsRepository;
 
+    private RedisUtil redisUtil;
+
     @Autowired
-    public GoodsController(SecGoodsRepository secGoodsRepository) {
+    public GoodsController(SecGoodsRepository secGoodsRepository, RedisUtil redisUtil) {
         this.secGoodsRepository = secGoodsRepository;
+        this.redisUtil = redisUtil;
     }
 
     @RequestMapping("/list")
@@ -31,7 +39,12 @@ public class GoodsController {
 
     //detail - 基础信息、秒杀开始还是结束信息
     @RequestMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable("id")Long id) {
+    public String detail(HttpServletRequest request,
+                         Model model,
+                         @PathVariable("id")Long id) {
+        String token = CookieUtil.readLoginToken(request);
+        User user = (User) redisUtil.get(UserKey.getByName, token);
+        model.addAttribute("user", user);
         SecGood secGood = secGoodsRepository.getOne(id);
         model.addAttribute("goods", secGood);
         long start = secGood.getStartTime().getTime();
@@ -47,7 +60,7 @@ public class GoodsController {
             remainSeconds = -1;
         } else {
             seckillStatus = 1;
-            remainSeconds = (int) ((end - now) / 1000);
+            remainSeconds = 0;
         }
         model.addAttribute("seckillStatus", seckillStatus);
         model.addAttribute("remainSeconds", remainSeconds);

@@ -1,9 +1,14 @@
 package entity.order;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * jpa/Hibernate创建order表出错
@@ -12,6 +17,8 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "\"order\"")
 public class Order {
     @Id
@@ -24,13 +31,13 @@ public class Order {
     @Column
     private int num;
     @Column
-    private double price;
+    private BigDecimal price;
     @Column(length = 32)
     private String address;
     @Column
     private OrderStatus status;
     @Column
-    private Long createTime;
+    private Date createTime;
     @Column
-    private Long updateTime;
+    private Date updateTime;
 }

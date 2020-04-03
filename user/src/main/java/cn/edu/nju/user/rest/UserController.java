@@ -8,7 +8,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import rest.CodeMsg;
 import rest.RestResponse;
 
 @Api(tags = "用户服务", description = "提供用户服务相关Rest API")
@@ -24,22 +26,28 @@ public class UserController {
 
     @ApiOperation("用户注册接口")
     @PostMapping("/signUp")
-    public User signUp(@RequestBody User user) {
+    public RestResponse<User> signUp(@RequestBody User user) {
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         String pwd = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         newUser.setPassword(pwd);
         newUser = userRepository.save(newUser);
         newUser.setPassword("");
-        return newUser;
+        return RestResponse.success(newUser);
     }
 
     @ApiOperation("用户登录验证接口")
     @PostMapping("/signIn")
-    public boolean signIn(@RequestBody User user) {
+    public RestResponse<User> signIn(@RequestBody User user) {
         User foundUser = userRepository.findByMobile(user.getMobile());
-        if (foundUser == null) return false;
-        return BCrypt.checkpw(user.getPassword(), foundUser.getPassword());
+        if (foundUser == null) return RestResponse.error(HttpStatus.NOT_FOUND, CodeMsg.USER_NOT_FOUND);
+        if (BCrypt.checkpw(user.getPassword(), foundUser.getPassword())) {
+            user.setPassword("");
+            foundUser.setPassword("");
+            return RestResponse.success(foundUser);
+        } else {
+            return RestResponse.error(HttpStatus.NOT_FOUND, CodeMsg.USER_INFO_ERROR);
+        }
     }
 
     /**

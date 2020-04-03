@@ -9,8 +9,12 @@ import entity.product.Product;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import rest.CodeMsg;
+import rest.RestResponse;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,12 +34,12 @@ public class OrderController {
         this.orderRepository = orderRepository;
     }
 
-    @ApiOperation("生成订单接口")
-    @PostMapping("/orders")
-    public boolean createOrder(@RequestParam("uid")Long uid,
-                             @RequestParam("pid")Long pid,
-                             @RequestParam("num")int num,
-                             @RequestParam("address")String address) {
+    @ApiOperation("使用参数生成订单接口")
+    @PostMapping("/orders/params")
+    public RestResponse<Order> createOrder(@RequestParam("uid")Long uid,
+                                    @RequestParam("pid")Long pid,
+                                    @RequestParam("num")int num,
+                                    @RequestParam("address")String address) {
         Order order = new Order();
         order.setUid(uid);
         order.setPid(pid);
@@ -43,8 +47,9 @@ public class OrderController {
         order.setNum(num);
         //price = num * product's price
         Product product = productFeign.getProductById(pid);
-        order.setPrice(num * product.getPrice());
-        order.setCreateTime(new Date().getTime());
+        order.setPrice(product.getPrice().multiply(new BigDecimal(num)));
+        order.setCreateTime(new Date());
+        order.setUpdateTime(new Date());
         order.setStatus(OrderStatus.UNCONFIRMED);
 
         orderRepository.save(order);
@@ -52,15 +57,22 @@ public class OrderController {
         //查库存，如果库存大于num，则下单成功，更新订单状态；小于num，下单失败，订单状态改为失效状态
         if (inventoryFeign.updateInventory(pid, num)) {
             order.setStatus(OrderStatus.CONFIRMED);
-            order.setUpdateTime(new Date().getTime());
+            order.setUpdateTime(new Date());
             orderRepository.save(order);
-            return true;
+            return RestResponse.success(order);
         } else {
             order.setStatus(OrderStatus.INVALID);
-            order.setUpdateTime(new Date().getTime());
+            order.setUpdateTime(new Date());
             orderRepository.save(order);
-            return false;
+            return RestResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, CodeMsg.INVENTORY_NOT_ENOUGH);
         }
+    }
+
+    @ApiOperation("使用Order实体类生成订单接口")
+    @PostMapping("/orders/order")
+    public RestResponse<Order> createOrder(@RequestBody Order order) {
+        orderRepository.save(order);
+        return RestResponse.success(order);
     }
 
     @ApiOperation("查询订单接口")

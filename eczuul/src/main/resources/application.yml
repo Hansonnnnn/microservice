@@ -19,6 +19,23 @@ spring:
     mode: HTML5
     prefix: classpath:/templates/
     suffix: .html
+  #redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 10
+    jedis:
+      pool:
+        max-active: 500
+        max-idle: 500
+        max-wait: 500
+
+  #jpa
+  jpa:
+    show-sql: true
+    database: mysql
+    hibernate:
+      ddl-auto: update
 
 ribbon:
   eureka:
@@ -32,5 +49,3 @@ eureka:
     registry-fetch-interval-seconds: 5
   instance:
     lease-renewal-interval-in-seconds: 5
-
-
