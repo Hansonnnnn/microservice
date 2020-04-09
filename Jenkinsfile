@@ -5,7 +5,7 @@ pipeline {
     maven 'Maven'
     }
     environment {
-        REPOSITORY = "https://github.com/ZhiTingXin/microservice.git"
+        REPOSITORY = "https://github.com/RadiationXie/microservice.git"
         SERVICE_DIR = "microservice"
     }
     stages {
