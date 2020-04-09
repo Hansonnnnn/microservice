@@ -10,4 +10,7 @@ import rest.RestResponse;
 public interface UserFeignClient {
     @PostMapping(value = "/users/signIn")
     RestResponse<User> signIn(@RequestBody User user);
+
+    @PostMapping(value = "/users/signUp")
+    RestResponse<User> signUp(@RequestBody User user);
 }

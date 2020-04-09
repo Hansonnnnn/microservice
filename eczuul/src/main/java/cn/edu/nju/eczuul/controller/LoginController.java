@@ -48,6 +48,22 @@ public class LoginController {
         return Response.error(CodeMsg.USER_INFO_ERROR);
     }
 
+    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
+    @ResponseBody
+    public Response<User> signUp(HttpServletResponse response,
+                                HttpSession session,
+                                @Valid LoginParam loginParam) {
+        User user = User.builder().mobile(loginParam.getMobile()).password(loginParam.getPassword()).build();
+        RestResponse<User> result = userFeignClient.signUp(user);
+        if (result.isSuccess()) {
+            CookieUtil.writeWithCookie(response, session.getId());
+            user.setPassword(null);
+            redisUtil.set(UserKey.getByName, session.getId(), result.getData(), Const.RedisCacheExpireTime.REDIS_SESSION_EXTIME);
+            return Response.success(user);
+        }
+        return Response.error(CodeMsg.USER_INFO_ERROR);
+    }
+
     /**
      * @return login page
      */

@@ -1,6 +1,6 @@
 CREATE TABLE sec_goods(
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(10) DEFAULT NULL,
+  `name` VARCHAR(64) DEFAULT NULL,
   `detail` VARCHAR(64) DEFAULT NULL,
   `price` DOUBLE(7,2) DEFAULT 0,
   `sec_price` DOUBLE(7,2) DEFAULT `price`,

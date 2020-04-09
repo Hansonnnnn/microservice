@@ -16,6 +16,5 @@ public class LoginParam {
     @IsMobile()
     private String mobile;
     @NotNull(message="密码不能为空")
-    @Length(min = 7, max = 23)
     private String password;
 }

@@ -17,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(nullable = false, length = 32)
+    @Column(length = 32)
     private String username;
     @Column(nullable = false, length = 11, unique = true)
     private String mobile;

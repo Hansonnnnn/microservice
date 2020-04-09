@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import rest.CodeMsg;
 import rest.RestResponse;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Api(tags = "用户服务", description = "提供用户服务相关Rest API")
 @RestController("UserController")
 @RequestMapping("/users")
@@ -30,7 +33,16 @@ public class UserController {
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         String pwd = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        newUser.setMobile(user.getMobile());
         newUser.setPassword(pwd);
+        Set<String> addresses = user.getAddresses();
+        if (addresses == null) {
+            addresses = new HashSet<>();
+            addresses.add("上海市-市辖区-普陀区-曹杨新村街道");
+            newUser.setAddresses(addresses);
+        } else {
+            newUser.setAddresses(addresses);
+        }
         newUser = userRepository.save(newUser);
         newUser.setPassword("");
         return RestResponse.success(newUser);
