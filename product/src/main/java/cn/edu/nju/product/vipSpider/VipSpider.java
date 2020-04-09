@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Random;
 
 /**
@@ -76,7 +77,7 @@ public class VipSpider  {
                             Product product = new Product();
                             product.setProductId(productId);
                             product.setName(name);
-                            product.setPrice(price);
+                            product.setPrice(new BigDecimal(price));
                             product.setBrandName(brandName);
                             productRepository.save(product);
                         } catch (IOException e) {

@@ -10,6 +10,8 @@
         <module>eceureka</module>
         <module>eczuul</module>
         <module>common</module>
+        <module>product</module>
+        <module>inventory</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

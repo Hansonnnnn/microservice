@@ -22,9 +22,9 @@ public class OrderApplicationTests {
 
     @Test
     public void testProductFeign() {
-        Product product = productFeign.getProductById(4L);
-        if (product != null) {
-            System.out.println(product.toString());
-        }
+//        Product product = productFeign.getProductById(4L);
+//        if (product != null) {
+//            System.out.println(product.toString());
+//        }
     }
 }
